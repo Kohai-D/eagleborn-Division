@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EagleBorn Division | Terminal de Commandement</title>
+    <style>
+        :root {
+            --primary: #0066ff; 
+            --discord: #5865F2; 
+            --bg: #050505;
+            --card: rgba(5, 5, 10, 0.98);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', 'Courier New', monospace;
+            background-color: var(--bg);
+            color: #d0d0d0;
+            background-image: 
+                linear-gradient(rgba(0, 102, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 102, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            scroll-behavior: smooth;
+        }
+
+        nav {
+            background: rgba(0,0,0,0.95);
+            padding: 15px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            border-bottom: 2px solid var(--primary);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+
+        header {
+            height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle, rgba(0, 102, 255, 0.1) 0%, rgba(0,0,0,1) 100%);
+            border-bottom: 3px solid var(--primary);
+            padding-top: 60px;
+        }
+
+        header h1 {
+            font-size: clamp(2rem, 7vw, 4.5rem);
+            letter-spacing: 10px;
+            margin: 0;
+            color: #fff;
+            text-shadow: 0 0 15px var(--primary);
+        }
+
+        .container { max-width: 900px; margin: 60px auto; padding: 20px; }
+
+        h2 { 
+            color: var(--primary); 
+            text-transform: uppercase; 
+            letter-spacing: 4px; 
+            border-bottom: 1px solid rgba(0, 102, 255, 0.2); 
+            padding-bottom: 10px;
+            font-size: 1.4rem;
+        }
+
+        .box { 
+            background: var(--card); 
+            padding: 30px; 
+            border: 1px solid #001a33; 
+            border-radius: 4px; 
+            margin-bottom: 40px; 
+            line-height: 1.6;
+        }
+
+        /* RÉGIMENTS */
+        .reg-folder { background: #000810; margin-bottom: 12px; border-left: 3px solid #002244; cursor: pointer; transition: 0.3s; }
+        .reg-folder:hover { border-left-color: var(--primary); background: #001122; }
+        .reg-top { padding: 20px; display: flex; justify-content: space-between; font-weight: bold; }
+        .status-tag { font-size: 10px; padding: 2px 8px; border-radius: 3px; text-transform: uppercase; }
+        .op { color: #00ff66; border: 1px solid #00ff66; }
+        .nop { color: var(--primary); border: 1px solid var(--primary); }
+        .reg-desc { max-height: 0; overflow: hidden; transition: 0.4s; background: #000; color: #888; padding: 0 20px; }
+        .reg-folder.active .reg-desc { max-height: 500px; padding: 20px; border-top: 1px solid #002244; }
+
+        /* HIERARCHIE */
+        .grade-category { color: var(--primary); font-weight: bold; padding: 15px 0 5px 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background: var(--card); }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #001a33; }
+        th { color: #555; text-transform: uppercase; font-size: 10px; width: 30%; }
+
+        /* FORMULAIRE */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        label { display: block; color: var(--primary); font-size: 11px; font-weight: bold; text-transform: uppercase; margin-top: 15px; letter-spacing: 1px; }
+        input, select, textarea { width: 100%; padding: 15px; margin: 5px 0 15px 0; background: #000; border: 1px solid #002244; color: #fff; font-family: inherit; box-sizing: border-box; }
+        button { width: 100%; padding: 20px; background: var(--primary); color: #fff; border: none; font-weight: 900; text-transform: uppercase; cursor: pointer; transition: 0.3s; margin-top: 20px; }
+        button:hover { background: #fff; color: #000; letter-spacing: 5px; }
+
+        /* SECTION DISCORD SOBRE */
+        .discord-section-v3 { padding: 80px 20px; background: #000; text-align: center; border-top: 1px solid #001a33; }
+        .discord-tag { color: var(--primary); font-size: 10px; letter-spacing: 5px; margin-bottom: 10px; }
+        .discord-section-v3 h2 { color: #fff; border: none; font-size: 1.8rem; letter-spacing: 3px; margin-bottom: 30px; }
+        .discord-btn-v3 { display: inline-block; padding: 18px 45px; color: #fff; text-decoration: none; border: 1px solid var(--primary); font-weight: bold; font-size: 13px; letter-spacing: 2px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .discord-btn-v3:hover { transform: scale(1.1); background: var(--primary); box-shadow: 0 0 20px rgba(0, 102, 255, 0.4); }
+
+        footer { padding: 40px; text-align: center; font-size: 10px; color: #003366; letter-spacing: 2px; background: #000; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="#histoire">HISTOIRE</a>
+    <a href="#regiments">UNITÉS</a>
+    <a href="#grades">HIÉRARCHIE</a>
+    <a href="#recrutement">RECRUTEMENT</a>
+</nav>
+
+<header>
+    <h1>EAGLEBORN DIVISION</h1>
+    <p style="color:var(--primary); letter-spacing: 6px; font-weight: bold;">EFFECTIFS OPÉRATIONNEL BLEU</p>
+</header>
+
+<div class="container">
+    <section id="histoire">
+        <h2>Histoire</h2>
+        <div class="box">
+            <p>Le Koubouchan est un pays d'importance stratégique, riche en ressources énergétiques, notamment en pétrole. Sa population est nombreuse mais profondément ancrée dans ses traditions locales notamment la vente de légumes par les civils, pétrole, vins.</p>
+            <p>Durant les années 2020, la région d’Afrique centrale devient le théâtre d’une escalade géopolitique majeure. La Russie lance une invasion au Koubouchan où les habitants furent soumis à une extrême violence. L’armée locale fut vite terrassée par les forces russes dû au manque de développement et de troupes. Cherchant à accroître son influence, la Russie commença à piller toutes les ressources possibles :</p>
+            <ul style="color: var(--primary); list-style-type: square; margin: 15px 0;">
+                <li>Violences contre les civils</li>
+                <li>Pillages systématiques des villes et villages</li>
+                <li>Vol du pétrole et des ressources locales</li>
+                <li>Terreur organisée pour briser la résistance</li>
+            </ul>
+            <p>Sous pression internationale, la <strong>EagleBorn Division</strong> est déployée au Koubouchan avec une mission claire : protéger les civils, dégager les forces russes et rétablir la souveraineté du pays. Soutenue par des alliés de l’OTAN, la Division a mené une intervention majeure.</p>
+            <p>Écrasées militairement, les autorités russes ont annoncé un retrait complet. La population retrouve espoir, et la <strong>EagleBorn Division</strong> assure désormais une transition sûre pour le Koubouchan.</p>
+        </div>
+    </section>
+
+    <section id="regiments">
+        <h2>Unités de la Division</h2>
+        
+        <div class="reg-folder" onclick="this.classList.toggle('active')">
+            <div class="reg-top"><span>Forces Spéciales</span><span class="status-tag nop">Non Opérationnel</span></div>
+            <div class="reg-desc">Groupe d'interventions hautement entraînées pour accomplir des missions complexes, souvent dans des environnements hostiles.</div>
+        </div>
+
+        <div class="reg-folder" onclick="this.classList.toggle('active')">
+            <div class="reg-top"><span>1st Battalion, 64th Armor Regiment</span><span class="status-tag op">Opérationnel</span></div>
+            <div class="reg-desc">Bataillon blindé spécialisé. Son rôle principal est de déployer des forces lourdes avec des chars M1 Abrams.</div>
+        </div>
+
+        <div class="reg-folder" onclick="this.classList.toggle('active')">
+            <div class="reg-top"><span>Air Forces</span><span class="status-tag op">Opérationnel</span></div>
+            <div class="reg-desc">Branche spécialisée dans la guerre aérienne, chargée de contrôler l’espace aérien et de mener des missions de reconnaissance.</div>
+        </div>
+
+        <div class="reg-folder" onclick="this.classList.toggle('active')">
+            <div class="reg-top"><span>1st Battalion, 1st Air Defense Artillery Regiment</span><span class="status-tag op">Opérationnel</span></div>
+            <div class="reg-desc">Unité spécialisée dans la défense aérienne et antimissile.</div>
+        </div>
+
+        <div class="reg-folder" onclick="this.classList.toggle('active')">
+            <div class="reg-top"><span>Machine Gunner</span><span class="status-tag op">Opérationnel</span></div>
+            <div class="reg-desc">Soldat expérimenté pour l'utilisation de mitrailleuse lourde et lance roquette. Sert à protéger une position.</div>
+        </div>
+
+        <div class="reg-folder" onclick="this.classList.toggle('active')">
+            <div class="reg-top"><span>327th Infantry Regiment</span><span class="status-tag op">Opérationnel</span></div>
+            <div class="reg-desc">Unité de combat au sol spécialisée dans l’assaut direct et le combat rapproché.</div>
+        </div>
+    </section>
+
+    <section id="grades">
+        <h2>Hiérarchie Militaire</h2>
+        <div class="box">
+            <div class="grade-category">Généraux (General Officers)</div>
+            <table>
+                <tr><th>OF-10</th><td>General of the Army ★★★★★</td></tr>
+                <tr><th>OF-09</th><td>General ★★★★</td></tr>
+                <tr><th>OF-08</th><td>Lieutenant General ★★★</td></tr>
+                <tr><th>OF-07</th><td>Major General ★★</td></tr>
+            </table>
+            <div class="grade-category">Officiers Commissionnés</div>
+            <table>
+                <tr><th>OF-04</th><td>Lieutenant Colonel</td></tr>
+                <tr><th>OF-03</th><td>Major</td></tr>
+                <tr><th>OF-02</th><td>Captain</td></tr>
+                <tr><th>OF-01</th><td>First Lieutenant</td></tr>
+            </table>
+            <div class="grade-category">Warrant Officers</div>
+            <table>
+                <tr><th>WO-03</th><td>Chief Warrant Officer 3</td></tr>
+                <tr><th>WO-02</th><td>Chief Warrant Officer 2</td></tr>
+                <tr><th>WO-01</th><td>Warrant Officer 1</td></tr>
+            </table>
+            <div class="grade-category">Sous-officiers & Militaires du rang</div>
+            <table>
+                <tr><th>OR-07</th><td>Sergeant Major</td></tr>
+                <tr><th>OR-06</th><td>First Sergeant</td></tr>
+                <tr><th>OR-05</th><td>Master Sergeant</td></tr>
+                <tr><th>OR-04</th><td>Sergeant First Class</td></tr>
+                <tr><th>OR-03</th><td>Sergeant</td></tr>
+                <tr><th>OR-02</th><td>Corporal</td></tr>
+                <tr><th>OR-01</th><td>Private</td></tr>
+            </table>
+        </div>
+    </section>
+
+    <section id="recrutement">
+        <h2>Dossier de Recrutement</h2>
+        <div class="box">
+            <form id="eagleForm">
+                <label>Pseudo Discord</label>
+                <input type="text" id="discord_pseudo" placeholder="Ex: Pseudo#1234" required>
+
+                <div class="form-grid">
+                    <div>
+                        <label>Nom</label>
+                        <input type="text" id="nom" required>
+                    </div>
+                    <div>
+                        <label>Prénom</label>
+                        <input type="text" id="prenom" required>
+                    </div>
+                </div>
+                <label>Age Rp / HRP</label>
+                <input type="text" id="age" required>
+                <label>Régiment souhaité</label>
+                <select id="regiment_choice" required>
+                    <option value="" disabled selected>SÉLECTIONNER UN RÉGIMENT</option>
+                    <option value="64th Armor">1st Battalion, 64th Armor Regiment</option>
+                    <option value="Air Forces">Air Forces</option>
+                    <option value="Machine Gunner">Machine Gunner</option>
+                    <option value="327th Infantry">327th Infantry Regiment</option>
+                </select>
+                <label>Histoire du personnage en RP</label>
+                <textarea id="histoire_rp" rows="6" required></textarea>
+                <label>Vos motivations pour entrer dans l'armée</label>
+                <textarea id="motivations" rows="4" required></textarea>
+                <label>Quelles sont les qualités requises pour être un bon soldat selon toi</label>
+                <textarea id="qualites_soldat" rows="3" required></textarea>
+                <label>Comment gères-tu le stress ou la pression</label>
+                <textarea id="stress" rows="3" required></textarea>
+                <label>Quelles sont tes qualités et tes défauts</label>
+                <textarea id="qualites_defauts" rows="3" required></textarea>
+                <label>As-tu déjà été dans l’armée auparavant</label>
+                <input type="text" id="experience" required>
+                <label>Comment ta famille perçoit-elle ton projet</label>
+                <input type="text" id="famille" required>
+                <label>Où te vois-tu dans 10 ans</label>
+                <input type="text" id="futur" required>
+                <button type="submit">TRANSMETTRE LE DOSSIER</button>
+            </form>
+            <p id="msg" style="display:none; color: var(--primary); text-align: center; font-weight: bold; padding: 20px;">DOSSIER TRANSMIS AVEC SUCCÈS AU COMMANDEMENT.</p>
+        </div>
+    </section>
+</div>
+
+<section class="discord-section-v3">
+    <div class="discord-inner">
+        <p class="discord-tag">LIAISON SÉCURISÉE</p>
+        <h2>CENTRE DE COMMANDEMENT</h2>
+        <a href="https://discord.gg/VhXYVNBEjn" target="_blank" class="discord-btn-v3">REJOINDRE LE DISCORD</a>
+    </div>
+</section>
+
+<footer>
+    <p>© EAGLEBORN DIVISION - TERMINAL TACTIQUE v2.9</p>
+</footer>
+
+<script>
+    const WEBHOOK = "https://discord.com/api/webhooks/1460703257596002473/sHFMqipZAs4vAV3qare7BOu6yYs4CKdSJr7FIW00AFsdm5wUY_fo1fe54IkcApcnGbAH";
+    document.getElementById('eagleForm').onsubmit = function(e) {
+        e.preventDefault();
+        const data = {
+            username: "Bureau de Recrutement EagleBorn",
+            embeds: [{
+                title: "🔵 DOSSIER D'ENGAGEMENT ",
+                color: 26367, 
+                fields: [
+                    { name: "🎮 Pseudo Discord", value: document.getElementById('discord_pseudo').value },
+                    { name: "👤 Identité", value: "**Nom:** " + document.getElementById('nom').value + "\n**Prénom:** " + document.getElementById('prenom').value, inline: true },
+                    { name: "⏳ Ages (RP/HRP)", value: document.getElementById('age').value, inline: true },
+                    { name: "🎯 Régiment", value: document.getElementById('regiment_choice').value, inline: true },
+                    { name: "📜 Histoire RP", value: document.getElementById('histoire_rp').value },
+                    { name: "🔥 Motivations", value: document.getElementById('motivations').value },
+                    { name: "🎖️ Vision d'un soldat", value: document.getElementById('qualites_soldat').value },
+                    { name: "🧠 Stress & Pression", value: document.getElementById('stress').value },
+                    { name: "⚖️ Qualités / Défauts", value: document.getElementById('qualites_defauts').value },
+                    { name: "⚔️ Expérience", value: document.getElementById('experience').value },
+                    { name: "🏠 Avis famille", value: document.getElementById('famille').value },
+                    { name: "🚀 Futur", value: document.getElementById('futur').value }
+                ],
+                timestamp: new Date()
+            }]
+        };
+        fetch(WEBHOOK, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) })
+        .then(() => {
+            document.getElementById('eagleForm').style.display = 'none';
+            document.getElementById('msg').style.display = 'block';
+        });
+    };
+</script>
+</body>
+</html>
